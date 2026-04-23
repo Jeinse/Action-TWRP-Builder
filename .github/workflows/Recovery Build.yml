@@ -151,20 +151,7 @@ jobs:
       uses: pierotofy/set-swap-space@master
       with:
         swap-size-gb: 12
-
-    - name: Fix vold_decrypt Android.mk
-      run: |
-        sed -i '/init.recovery.vold_decrypt.rc/,/^include\s\+\$(BUILD_PREBUILT)/ {
-          s/LOCAL_MODULE_CLASS := RECOVERY_EXECUTABLES/LOCAL_MODULE_CLASS := ETC/g
-          /LOCAL_MODULE_CLASS := ETC/a\
-          LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)
-        }' bootable/recovery/crypto/vold_decrypt/Android.mk
-         if ! grep -q 'LOCAL_C_INCLUDES += bootable/recovery' bootable/recovery/crypto/vold_decrypt/Android.mk; then
-          sed -i '/LOCAL_SRC_FILES = vold_decrypt.cpp/i\    LOCAL_C_INCLUDES += bootable/recovery' bootable/recovery/crypto/vold_decrypt/Android.mk
-        fi
-        cat bootable/recovery/crypto/vold_decrypt/Android.mk
-      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
-
+        
     - name: Building recovery
       run: |
         source build/envsetup.sh
